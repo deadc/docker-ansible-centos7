@@ -1,5 +1,4 @@
 FROM centos:centos7
-ENV container docker
 
 RUN yum -y update; yum clean all
 RUN yum -y swap -- remove systemd-container systemd-container-libs -- install systemd systemd-libs dbus fsck.ext4
