@@ -1,7 +1,12 @@
-FROM centos:centos7
+FROM centos:7
 
-RUN yum -y update; yum clean all
-RUN yum -y swap -- remove systemd-container systemd-container-libs -- install systemd systemd-libs dbus fsck.ext4
+RUN yum -y update; yum -y install epel-release
+RUN yum -y update && yum -y install \
+    python-pip                      \
+    && yum clean all
+
+RUN yum -y swap -- remove systemd-container systemd-container-libs   \
+                -- install systemd systemd-libs dbus fsck.ext4
 
 RUN systemctl mask dev-mqueue.mount dev-hugepages.mount              \
     systemd-remount-fs.service sys-kernel-config.mount               \
@@ -11,11 +16,10 @@ RUN systemctl mask dev-mqueue.mount dev-hugepages.mount              \
 ADD dbus.service /etc/systemd/system/dbus.service
 RUN systemctl enable dbus.service
 
-VOLUME [ "/sys/fs/cgroup" ]
-VOLUME [ "/run" ]
+VOLUME ["/sys/fs/cgroup"]
+VOLUME ["/run"]
 
-RUN yum clean all && yum -y install epel-release
-RUN yum -y install PyYAML python-crypto python-jinja2 python-paramiko python-setuptools python-six openssl sshpass curl which ansible
+RUN pip install ansible
 RUN curl -fsSL https://goss.rocks/install | sh
 
 WORKDIR /ansible
