@@ -20,7 +20,7 @@ RUN systemctl enable dbus.service
 VOLUME ["/sys/fs/cgroup"]
 VOLUME ["/run"]
 
-RUN pip install ansible
+RUN pip install ansible ansible-lint
 RUN curl -fsSL https://goss.rocks/install | sh
 
 WORKDIR /ansible
